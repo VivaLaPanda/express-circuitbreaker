@@ -1,0 +1,13 @@
+{
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "start": "ts-node src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
