@@ -7,14 +7,9 @@ type StatusOptions = {
 
 type Bucket = {
   failures: number;
-  fallbacks: number;
   successes: number;
-  rejects: number;
   fires: number;
   timeouts: number;
-  cacheHits: number;
-  cacheMisses: number;
-  semaphoreRejections: number;
   percentiles: { [key: number]: number };
   latencyTimes: number[];
   isCircuitBreakerOpen: boolean;
@@ -39,24 +34,17 @@ class Status {
 
   private async rotateBuckets(): Promise<void> {
     this.rotationTimer = setInterval(() => {
-      console.log('Rotating buckets...');
       this.buckets.pop();
       this.buckets.unshift(this.createBucket());
-      console.log(`Bucket count after rotation: ${this.buckets.length}`);
     }, this.timeout / this.buckets.length);
   }
 
   get stats(): Stats {
     const aggregatedStats: Stats = this.buckets.reduce((acc: Stats, bucket: Bucket) => {
       acc.failures += bucket.failures;
-      acc.fallbacks += bucket.fallbacks;
       acc.successes += bucket.successes;
-      acc.rejects += bucket.rejects;
       acc.fires += bucket.fires;
       acc.timeouts += bucket.timeouts;
-      acc.cacheHits += bucket.cacheHits;
-      acc.cacheMisses += bucket.cacheMisses;
-      acc.semaphoreRejections += bucket.semaphoreRejections;
     
       // Always accumulate latencyTimes, regardless of rollingPercentilesEnabled
       acc.latencyTimes = [...acc.latencyTimes, ...bucket.latencyTimes];
@@ -83,6 +71,8 @@ class Status {
         aggregatedStats.percentiles[percentile] = 0;
       });
     }
+
+    aggregatedStats.isCircuitBreakerOpen = this.buckets[0].isCircuitBreakerOpen;
   
     return aggregatedStats;
   }
@@ -121,14 +111,9 @@ class Status {
   private createBucket(): Bucket {
     return {
       failures: 0,
-      fallbacks: 0,
       successes: 0,
-      rejects: 0,
       fires: 0,
       timeouts: 0,
-      cacheHits: 0,
-      cacheMisses: 0,
-      semaphoreRejections: 0,
       percentiles: {},
       latencyTimes: [],
       isCircuitBreakerOpen: false,
