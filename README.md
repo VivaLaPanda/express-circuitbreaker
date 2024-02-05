@@ -2,7 +2,12 @@
 
 ## It calms the thundering herd
 
-[![Build Status](https://travis-ci.org/expressjs/circuitbreaker.svg?branch=master)](https://travis-ci.org/expressjs/circuitbreaker)
+[GitHub](https://github.com/VivaLaPanda/express-circuitbreaker)
+
+[![Build Status](https://travis-ci.org/VivaLaPanda/express-circuitbreaker.svg?branch=master)](https://travis-ci.org/VivaLaPanda/express-circuitbreaker)
+
+<!-- [![Coverage Status](https://coveralls.io/repos/github/VivaLaPanda/express-circuitbreaker/badge.svg?branch=master)](https://coveralls.io/github/VivaLaPanda/express-circuitbreaker?branch=master)
+[![npm version](https://badge.fury.io/js/express-cowboy.svg)](https://badge.fury.io/js/express-cowboy) -->
 
 [NPM](https://www.npmjs.com/package/express-cowboy)
 
