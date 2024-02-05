@@ -1,6 +1,5 @@
-import pino from "pino";
+import { Request, Response } from "express";
 import CircuitBreakerMiddleware from "./circuit";
-import express, { Request, Response } from "express";
 
 describe("CircuitBreakerMiddleware Tests", () => {
   let circuitBreaker: CircuitBreakerMiddleware;
@@ -155,6 +154,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should block request when circuit is open and logOnly is false", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({ ...options, logOnly: false });
       circuitBreaker.open();
       const req: Request = mockRequest();
@@ -169,6 +169,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should log but not block request when logOnly is true and circuit is open", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({ ...options, logOnly: true });
       circuitBreaker.open();
       const req: Request = mockRequest();
@@ -234,6 +235,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should support multiple timeouts before opening", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         volumeThreshold: 2,
@@ -264,6 +266,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
 
   describe("Fail", () => {
     it("should not open the circuit if failures do not exceed volume threshold", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({ ...options, volumeThreshold: 5 });
       const req = mockRequest();
       const res = mockResponse();
@@ -279,6 +282,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should not open the circuit if error rate does not exceed threshold", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         volumeThreshold: 3,
@@ -304,6 +308,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should open the circuit if both volume threshold and error rate are exceeded", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         volumeThreshold: 3,
@@ -323,6 +328,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should not open the circuit due to failures during warm-up period", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         allowWarmUp: true,
@@ -349,6 +355,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should keep the circuit closed if error rate is below threshold despite exceeding volume threshold", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         volumeThreshold: 3,
@@ -388,6 +395,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should not treat 400 and 500 status codes as failures when custom errorFilter is provided", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         isError: (res: Response) => res.statusCode >= 500, // Only consider 500 and above as errors
@@ -407,6 +415,7 @@ describe("CircuitBreakerMiddleware Tests", () => {
     });
 
     it("should increment failures for responses filtered as errors", async () => {
+      circuitBreaker.shutdown();
       circuitBreaker = new CircuitBreakerMiddleware({
         ...options,
         isError: (res: Response) => res.statusCode === 503, // Only consider 503 as errors

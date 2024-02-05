@@ -45,6 +45,7 @@ interface CircuitBreakerOptionsParam {
   // before the circuit breaker can open. This ensures that the circuit remains closed if
   // the number of requests within the statistical window does not exceed this threshold,
   // regardless of how many failures there are.
+  // Note that volumeThreshold is a == comparison, not a >= comparison.
   volumeThreshold?: number;
 
   // An optional function that will be called when the circuit's function fails (returns a rejected Promise).
