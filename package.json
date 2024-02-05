@@ -1,6 +1,6 @@
 {
-  "name": "express-circuitbreaker",
-  "version": "1.0.0",
+  "name": "express-cowboy",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "A circuit breaker implementation for Express, inspired by Opossum",
   "main": "lib/index.js",
